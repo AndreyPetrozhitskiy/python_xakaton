@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Виртуальные памятники</title>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='design.css') }}"
+		/>
+	</head>
+	<body>
+		<header>
+			<h1>Сервис создания виртуальных памятников</h1>
+			<p>Сохраните память о героях войн</p>
+		</header>
+
+		<main>
+			<section class="create-monument">
+				<h2>Создать новый памятник</h2>
+				<form method="POST" enctype="multipart/form-data" action="/">
+					<div class="form-grid">
+						<label for="login">Логин*:</label>
+						<input type="text" id="login" name="login" required />
+
+						<label for="password">Пароль*:</label>
+						<input type="password" id="password" name="password" required />
+						<label for="name">Имя участника*:</label>
+						<input type="text" id="name" name="name" required />
+
+						<label for="war">Война/Конфликт*:</label>
+						<input type="text" id="war" name="war" required />
+
+						<label for="story">Информация*:</label>
+						<textarea id="story" name="story" rows="4" required></textarea>
+
+						<label for="cover">Титульное изображение*:</label>
+						<input
+							type="file"
+							id="cover"
+							name="cover"
+							accept="image/*"
+							required
+						/>
+
+						<label for="photos">Прочие фото:</label>
+						<input
+							type="file"
+							id="photos"
+							name="photos"
+							multiple
+							accept="image/*"
+						/>
+
+						<label for="videos">Видеоматериалы:</label>
+						<input
+							type="file"
+							id="videos"
+							name="videos"
+							multiple
+							accept="video/*"
+						/>
+
+						<label for="audios">Аудиоматериалы:</label>
+						<input
+							type="file"
+							id="audios"
+							name="audios"
+							multiple
+							accept="audio/*"
+						/>
+
+						<div class="form-button-container">
+							<button type="submit">Сохранить память</button>
+						</div>
+					</div>
+				</form>
+			</section>
+
+			<section class="monuments-list">
+				<h2>Созданные памятники</h2>
+				<div class="monuments-container">
+					{% for item in monuments %}
+					<article
+						class="monument-card"
+						data-id="{{ item.id }}"
+						data-name="{{ item.name|e }}"
+						data-war="{{ item.war|e }}"
+						data-story="{{ item.story|e }}"
+						data-cover="{{ url_for('static', filename='uploads/' + item.cover) }}"
+						data-photos="{{ item.photos|e }}"
+						data-videos="{{ item.videos|e }}"
+						data-audios="{{ item.audios|e }}"
+						data-date="{{ item.created_at }}"
+					>
+						<img
+							class="cover-img"
+							src="{{ url_for('static', filename='uploads/' + item.cover) }}"
+							alt="Титульное изображение"
+						/>
+						<div class="card-info">
+							<h3>{{ item.name }}</h3>
+							<p class="war-info">{{ item.war }}</p>
+							<p class="date">{{ item.created_at }}</p>
+						</div>
+					</article>
+					{% endfor %}
+				</div>
+			</section>
+
+			<!-- Модальное окно для развёрнутой карточки -->
+			<div id="modal" class="modal">
+				<div class="modal-content">
+					<button class="close-btn" onclick="closeModal()">&times;</button>
+					<div class="modal-main">
+						<img
+							id="modal-cover"
+							class="modal-cover"
+							src=""
+							alt="Титульное изображение"
+						/>
+						<div class="modal-header">
+							<h2 id="modal-name"></h2>
+							<p id="modal-war" class="war-info"></p>
+							<p id="modal-date" class="date"></p>
+						</div>
+					</div>
+					<div id="modal-story" class="modal-story"></div>
+					<div id="modal-media" class="modal-media"></div>
+					<div class="comments-section">
+						<h4>Комментарии</h4>
+						<ul class="comments-list" id="modal-comments"></ul>
+						<form id="comment-form" onsubmit="return submitComment(event)">
+							<input
+								type="text"
+								id="comment-nick"
+								placeholder="Ваш ник"
+								required
+							/>
+							<input
+								type="text"
+								id="comment-text"
+								placeholder="Комментарий..."
+								required
+							/>
+							<button type="submit">Отправить</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div
+				id="modal-backdrop"
+				class="modal-backdrop"
+				onclick="closeModal()"
+			></div>
+		</main>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const form = document.querySelector('form')
+				form.addEventListener('submit', function (e) {
+					const login = document.getElementById('login').value.trim()
+					const password = document.getElementById('password').value.trim()
+
+					if (login !== 'adminSVO' || password !== '84361488SVOGOIDA') {
+						e.preventDefault()
+						alert('Неверный логин или пароль')
+					}
+				})
+			})
+		</script>
+		<script src="{{ url_for('static', filename='modal.js') }}"></script>
+	</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Виртуальные памятники</title>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='design.css') }}"
+		/>
+	</head>
+	<body>
+		<header>
+			<h1>Сервис создания виртуальных памятников</h1>
+			<p>Сохраните память о героях войн</p>
+		</header>
+
+		<main>
+			<section class="create-monument">
+				<h2>Создать новый памятник</h2>
+				<form method="POST" enctype="multipart/form-data" action="/">
+					<div class="form-grid">
+						<label for="name">Имя участника*:</label>
+						<input type="text" id="name" name="name" required />
+
+						<label for="war">Война/Конфликт*:</label>
+						<input type="text" id="war" name="war" required />
+
+						<label for="story">Информация*:</label>
+						<textarea id="story" name="story" rows="4" required></textarea>
+
+						<label for="cover">Титульное изображение*:</label>
+						<input
+							type="file"
+							id="cover"
+							name="cover"
+							accept="image/*"
+							required
+						/>
+
+						<label for="photos">Прочие фото:</label>
+						<input
+							type="file"
+							id="photos"
+							name="photos"
+							multiple
+							accept="image/*"
+						/>
+
+						<label for="videos">Видеоматериалы:</label>
+						<input
+							type="file"
+							id="videos"
+							name="videos"
+							multiple
+							accept="video/*"
+						/>
+
+						<label for="audios">Аудиоматериалы:</label>
+						<input
+							type="file"
+							id="audios"
+							name="audios"
+							multiple
+							accept="audio/*"
+						/>
+
+						<div class="form-button-container">
+							<button type="submit">Сохранить память</button>
+						</div>
+					</div>
+				</form>
+			</section>
+
+			<section class="monuments-list">
+				<h2>Созданные памятники</h2>
+				<div class="monuments-container">
+					{% for item in monuments %}
+					<article
+						class="monument-card"
+						data-id="{{ item.id }}"
+						data-name="{{ item.name|e }}"
+						data-war="{{ item.war|e }}"
+						data-story="{{ item.story|e }}"
+						data-cover="{{ url_for('static', filename='uploads/' + item.cover) }}"
+						data-photos="{{ item.photos|e }}"
+						data-videos="{{ item.videos|e }}"
+						data-audios="{{ item.audios|e }}"
+						data-date="{{ item.created_at }}"
+					>
+						<img
+							class="cover-img"
+							src="{{ url_for('static', filename='uploads/' + item.cover) }}"
+							alt="Титульное изображение"
+						/>
+						<div class="card-info">
+							<h3>{{ item.name }}</h3>
+							<p class="war-info">{{ item.war }}</p>
+							<p class="date">{{ item.created_at }}</p>
+						</div>
+					</article>
+					{% endfor %}
+				</div>
+			</section>
+
+			<!-- Модальное окно для развёрнутой карточки -->
+			<div id="modal" class="modal">
+				<div class="modal-content">
+					<button class="close-btn" onclick="closeModal()">&times;</button>
+					<div class="modal-main">
+						<img
+							id="modal-cover"
+							class="modal-cover"
+							src=""
+							alt="Титульное изображение"
+						/>
+						<div class="modal-header">
+							<h2 id="modal-name"></h2>
+							<p id="modal-war" class="war-info"></p>
+							<p id="modal-date" class="date"></p>
+						</div>
+					</div>
+					<div id="modal-story" class="modal-story"></div>
+					<div id="modal-media" class="modal-media"></div>
+					<div class="comments-section">
+						<h4>Комментарии</h4>
+						<ul class="comments-list" id="modal-comments"></ul>
+						<form id="comment-form" onsubmit="return submitComment(event)">
+							<input
+								type="text"
+								id="comment-nick"
+								placeholder="Ваш ник"
+								required
+							/>
+							<input
+								type="text"
+								id="comment-text"
+								placeholder="Комментарий..."
+								required
+							/>
+							<button type="submit">Отправить</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div
+				id="modal-backdrop"
+				class="modal-backdrop"
+				onclick="closeModal()"
+			></div>
+		</main>
+		<script src="{{ url_for('static', filename='modal.js') }}"></script>
+	</body>
+</html>
