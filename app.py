@@ -1,11 +1,11 @@
 import os
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-<<<<<<< HEAD
-from livereload import Server
-=======
 
->>>>>>> ecee3ec8b3f27385e62be45ef9b3f4c4b7822433
+from livereload import Server
+
+
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
@@ -118,7 +118,7 @@ def comments(page_id):
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     init_db()
-<<<<<<< HEAD
+
     server = Server(app.wsgi_app)
     server.watch('templates/**/*.html')
     server.watch('static/')
@@ -127,6 +127,6 @@ if __name__ == '__main__':
 def add_header(response):
     response.headers['Cache-Control'] = 'no-store'
     return response
-=======
+
     app.run(debug=True)
->>>>>>> ecee3ec8b3f27385e62be45ef9b3f4c4b7822433
+
